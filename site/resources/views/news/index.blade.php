@@ -20,7 +20,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             @foreach($feeds as $article)
             <article class="bg-white rounded-lg shadow-sm hover:shadow-md transition">
-                <a href="{{ route('news.article', $article['id']) }}" class="block">
+                <a href="{{ route('news.tmp-article', $article['id']) }}" class="block">
                     @if(isset($article['image']) && $article['image'])
                     <img src="{{ $article['image'] }}" 
                          alt="{{ $article['title'] }}" 

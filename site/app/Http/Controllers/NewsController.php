@@ -26,22 +26,7 @@ class NewsController extends Controller
         ]);
     }
 
-    /**
-     * Affiche les articles d'une source spécifique
-     */
-    public function source(string $source)
-    {
-        $feedData = $this->rssFeedService->getArticlesBySource($source, 20);
-        
-        if (empty($feedData)) {
-            abort(404, 'Source non trouvée');
-        }
-        
-        return view('news.source', [
-            'feedData' => $feedData,
-            'source' => $source
-        ]);
-    }
+
 
     /**
      * API JSON - Retourne tous les articles
@@ -89,7 +74,7 @@ class NewsController extends Controller
             abort(404, 'Article non trouvé');
         }
         
-        return view('news.article', [
+        return view('news.tmp-article', [
             'article' => $article
         ]);
     }
