@@ -1,29 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\NewsController;
+
 use App\Models\Article;
 
 
-
-
-Route::get('/article/{id}', [ArticleController::class, 'show'])->name('articles.show');
-
-
-use App\Http\Controllers\NewsController;
-
-// Routes pour l'interface web
-Route::get('/', [NewsController::class, 'index'])->name('news.index');
-Route::get('/source/{source}', [NewsController::class, 'source'])->name('news.source');
-Route::get('/article/{id}', [NewsController::class, 'article'])->name('news.article');
-
-// Routes API JSON
-Route::prefix('api')->group(function () {
-    Route::get('/news', [NewsController::class, 'apiAll'])->name('api.news.all');
-    Route::get('/news/{source}', [NewsController::class, 'apiSource'])->name('api.news.source');
+Route::get('/', function () {
+    return view('home'); // main page for list articles
 });
 
-Route::get('/articles/latest', function () {
+Route::get('/tmp-articles', [NewsController::class, 'index'])->name('news.index');   // temp route for news fetch
+Route::get('/tmp-articles/{id}', [NewsController::class, 'article'])->name('news.tmp-article');  // temp route for news id 
+
+Route::get('/article/{id}', [ArticleController::class, 'show'])->name('articles.show'); // Page for article detail view
+
+Route::get('/articles/latest', function () {                        // api route for ajax update
     $articles = Article::orderBy('id', 'desc')->take(10)->get();
-    return view('articles.main', compact('articles')); // partial Blade
+    return view('articles.main', compact('articles')); // article.main = blade layout of an article
 });
