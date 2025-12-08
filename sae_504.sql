@@ -28,9 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `articles` (
-  `id` uuid NOT NULL DEFAULT uuid(),
+  `id` CHAR(36) NOT NULL,
   `nom` varchar(255) NOT NULL,
-  `contenu` text NOT NULL
+  `contenu` text NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 COMMIT;
 
