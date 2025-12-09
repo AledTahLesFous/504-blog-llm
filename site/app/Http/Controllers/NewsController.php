@@ -74,6 +74,19 @@ class NewsController extends Controller
         // Calculer le MD5 de l'URL pour l'utiliser comme id
         $articleId = md5($chosen['url'] ?? '');
 
+        // Vérifier si l'article existe déjà dans la base
+        $existing = ChosenArticle::find($articleId);
+
+        if ($existing) {
+            // Article déjà en base, ne rien faire, juste retourner l'existant
+            return response()->json([
+                'success' => true,
+                'article' => $existing->data,
+                'timestamp' => now()->toIso8601String()
+            ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        }
+
+        // Article nouveau, on l'ajoute
         $record = ChosenArticle::create([
             'id' => $articleId,
             'data' => $chosen
