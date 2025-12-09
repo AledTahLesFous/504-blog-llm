@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Services\RssFeedService;
+use App\Services\TwitterService;
 use Illuminate\Http\Request;
 use App\Services\AIManager;
 
 class NewsController extends Controller
 {
     private RssFeedService $rssFeedService;
+    private TwitterService $twitterService;
 
-    public function __construct(RssFeedService $rssFeedService)
+    public function __construct(RssFeedService $rssFeedService, TwitterService $twitterService)
     {
         $this->rssFeedService = $rssFeedService;
+        $this->twitterService = $twitterService;
     }
 
     /**
@@ -104,4 +107,32 @@ public function apiRewriteOne(AIManager $ai)
 }
 
 
+    /**
+     * Poster un article sur Twitter (API JSON)
+     */
+    public function postToTwitter(string $id)
+    {
+        $article = $this->rssFeedService->getArticleById($id);
+        
+        if (!$article) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Article non trouvé'
+            ], 404);
+        }
+
+        // Formater le tweet
+        $tweetText = $this->twitterService->formatArticleForTweet($article);
+        
+        // Poster sur Twitter
+        $result = $this->twitterService->postTweet($tweetText);
+        
+        return response()->json([
+            'success' => $result['success'],
+            'message' => $result['message'],
+            'data' => $result['data'] ?? null,
+            'tweet' => $tweetText,
+            'timestamp' => now()->toIso8601String()
+        ], $result['success'] ? 200 : 400, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
 }

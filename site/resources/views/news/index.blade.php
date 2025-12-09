@@ -7,6 +7,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
+    <!-- Messages de succès/erreur -->
+    @if(session('success'))
+    <div class="max-w-6xl mx-auto px-4 pt-4">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+            {{ session('success') }}
+        </div>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="max-w-6xl mx-auto px-4 pt-4">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+            {{ session('error') }}
+        </div>
+    </div>
+    @endif
+
     <!-- Header -->
     <header class="bg-white shadow-sm border-b mb-8">
         <div class="max-w-6xl mx-auto px-4 py-6">
@@ -29,11 +46,22 @@
                     @endif
                     
                     <div class="p-4">
-                        <span class="inline-block px-2 py-1 text-xs font-semibold rounded {{ $article['source'] === 'bfmtv' ? 'bg-red-100 text-red-800' : ($article['source'] === 'lemonde' ? 'bg-blue-100 text-blue-800' : ($article['source'] === 'leparisien' ? 'bg-purple-100 text-purple-800' : ($article['source'] === 'cnews' ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'))) }}">
-                            {{ $article['source'] === 'leparisien' ? 'LE PARISIEN' : strtoupper($article['source']) }}
-                        </span>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="inline-block px-2 py-1 text-xs font-semibold rounded {{ $article['source'] === 'bfmtv' ? 'bg-red-100 text-red-800' : ($article['source'] === 'lemonde' ? 'bg-blue-100 text-blue-800' : ($article['source'] === 'leparisien' ? 'bg-purple-100 text-purple-800' : ($article['source'] === 'cnews' ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'))) }}">
+                                {{ $article['source'] === 'leparisien' ? 'LE PARISIEN' : strtoupper($article['source']) }}
+                            </span>
+                            
+                            <form action="{{ route('twitter.post', $article['id']) }}" method="POST" onclick="event.stopPropagation()">
+                                @csrf
+                                <button type="submit" class="text-blue-400 hover:text-blue-600 transition" title="Poster sur Twitter">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
                         
-                        <h3 class="font-semibold text-gray-900 mb-2 mt-2 line-clamp-2">
+                        <h3 class="font-semibold text-gray-900 mb-2">
                             {{ $article['title'] }}
                         </h3>
                         

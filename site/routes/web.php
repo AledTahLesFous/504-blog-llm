@@ -30,4 +30,5 @@ Route::get('/api/articles/one', [NewsController::class, 'apiOne']);
 
 Route::get('/api/articles/json', [NewsController::class, 'apiJson'])->name('news.api.json'); // API JSON route
 
-Route::get('/api/articles/rewrite', [NewsController::class, 'apiRewriteOne']);
+// Twitter routes
+Route::post('/twitter/post/{id}', [NewsController::class, 'postToTwitter'])->name('twitter.post');
