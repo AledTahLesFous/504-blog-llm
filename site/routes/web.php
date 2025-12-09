@@ -13,8 +13,6 @@ Route::get('/', function () {
     return view('home'); // main page for list articles
 });
 
-Route::get('/tmp-articles', [NewsController::class, 'index'])->name('news.index');   // temp route for news fetch
-Route::get('/tmp-articles/{id}', [NewsController::class, 'article'])->name('news.tmp-article');  // temp route for news id 
 
 Route::get('/article/{id}', [ArticleController::class, 'show'])->name('articles.show'); // Page for article detail view
 
@@ -26,5 +24,8 @@ Route::get('/articles/latest', function () {                        // api route
 Route::get('/test', function () {
     return app(AIManager::class)->test();
 });
+
+Route::get('/api/articles/one', [NewsController::class, 'apiOne']);
+
 
 Route::get('/api/articles/json', [NewsController::class, 'apiJson'])->name('news.api.json'); // API JSON route
