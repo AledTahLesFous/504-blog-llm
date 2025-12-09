@@ -6,6 +6,8 @@ use App\Services\RssFeedService;
 use App\Services\TwitterService;
 use Illuminate\Http\Request;
 use App\Services\AIController;
+use App\Models\ChosenArticle;
+
 
 class NewsController extends Controller
 {
@@ -163,6 +165,10 @@ class NewsController extends Controller
         // L'IA choisit 1 article
         $chosen = $ai->MchooseArticle($articles);
 
+         $record = ChosenArticle::create([
+            'data' => $chosen
+        ]);
+
         return response()->json([
             'success' => true,
             'article' => $chosen,
@@ -172,31 +178,23 @@ class NewsController extends Controller
 
         public function MapiRewriteOne(AIController $ai)
     {
-        // Récupérer un article choisi par l'IA
-        $feeds = $this->rssFeedService->getAllArticles(50);
-        if (empty($feeds)) {
-            return response()->json(['success'=>false,'message'=>'Aucun article disponible'],404);
+               $record = ChosenArticle::latest()->first();
+
+        if (!$record) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucun article enregistré'
+            ], 404);
         }
 
-        $articles = array_map(function($a){
-            return [
-                "title"=>$a['title'] ?? '',
-                "subtitle"=>"",
-                "content"=>$a['content'] ?? '',
-                "url"=>$a['url'] ?? ''
-            ];
-        }, $feeds);
+        $article = $record->data;
 
-        $chosen = $ai->MchooseArticle($articles);
-
-        // Réécriture du contenu
-        $rewritten = $ai->MrewriteArticle($chosen);
+        $rewritten = $ai->MrewriteArticle($article);
 
         return response()->json([
             'success' => true,
             'article' => $rewritten,
-            'original_url' => $chosen['url'] ?? null,
             'timestamp' => now()->toIso8601String()
-        ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        ]);
     }
 }
