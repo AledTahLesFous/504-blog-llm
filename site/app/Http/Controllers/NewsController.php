@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\RssFeedService;
 use Illuminate\Http\Request;
+use App\Services\AIManager;
 
 class NewsController extends Controller
 {
@@ -13,21 +14,6 @@ class NewsController extends Controller
     {
         $this->rssFeedService = $rssFeedService;
     }
-
-    /**
-     * Affiche tous les articles de toutes les sources
-     */
-    public function index()
-    {
-        $feeds = $this->rssFeedService->getAllArticles(15);
-        
-        return view('news.index', [
-            'feeds' => $feeds
-        ]);
-    }
-
-
-
     /**
      * API JSON - Retourne tous les articles
      */
@@ -43,7 +29,7 @@ class NewsController extends Controller
     }
 
     /**
-     * API JSON - Retourne les articles d'une source
+     * API JSON - Retourne les articles d'une source - PEUT ETRE A SUPPR
      */
     public function apiSource(string $source)
     {
@@ -60,22 +46,6 @@ class NewsController extends Controller
             'success' => true,
             'data' => $feedData,
             'timestamp' => now()->toIso8601String()
-        ]);
-    }
-
-    /**
-     * Affiche un article complet sur notre site
-     */
-    public function article(string $id)
-    {
-        $article = $this->rssFeedService->getArticleById($id);
-        
-        if (!$article) {
-            abort(404, 'Article non trouvé');
-        }
-        
-        return view('news.tmp-article', [
-            'article' => $article
         ]);
     }
 
@@ -102,4 +72,39 @@ class NewsController extends Controller
             'timestamp' => now()->toIso8601String()
         ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
+
+
+public function apiOne(AIManager $ai)
+{
+    // Récupération locale (pas de requête HTTP interne)
+    $feeds = $this->rssFeedService->getAllArticles(50);
+
+    if (empty($feeds)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Aucun article disponible'
+        ], 404);
+    }
+
+    // Prépare des articles propres pour l'IA
+    $articles = array_map(function($a) {
+        return [
+            "title" => $a['title'] ?? '',
+            "subtitle" => "",
+            "content" => $a['content'] ?? '',
+            "url" => $a['url'] ?? '',
+        ];
+    }, $feeds);
+    
+
+    // L'IA choisit 1 article
+    $chosen = $ai->chooseArticle($articles);
+
+    return response()->json([
+        'success' => true,
+        'article' => $chosen,
+        'timestamp' => now()->toIso8601String()
+    ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+}
+
 }
