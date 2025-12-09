@@ -53,13 +53,12 @@ class AIController
             schema: [
                 "type" => "object",
                 "properties" => [
-                    "id" => ["type" => "string"],
                     "title" => ["type" => "string"],
                     "subtitle" => ["type" => "string"],
                     "content" => ["type" => "string"],
                     "url" => ["type" => "string"]
                 ],
-                "required" => ["id", "title", "subtitle", "content", "url"]
+                "required" => ["title", "subtitle", "content", "url"]
             ]
         );
 

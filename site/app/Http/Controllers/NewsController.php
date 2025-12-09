@@ -30,7 +30,6 @@ class NewsController extends Controller
         // Transformer les articles pour ne garder que id, titre, corps et lien
         $articles = array_map(function($article) {
             return [
-                'id' => $article['id'] ?? '',
                 'titre' => $article['title'] ?? '',
                 'corps' => $article['content'] ?? '',
                 'lien' => $article['url'] ?? ''
