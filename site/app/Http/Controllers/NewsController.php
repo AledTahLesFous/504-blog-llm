@@ -152,45 +152,7 @@ class NewsController extends Controller
         ], $result['success'] ? 200 : 400, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
-/*
-        public function MapiOne(AIController $ai)
-    {
-        // Récupération locale (pas de requête HTTP interne)
-        $feeds = $this->rssFeedService->getAllArticles(50);
-
-        if (empty($feeds)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Aucun article disponible'
-            ], 404);
-        }
-
-        // Prépare des articles propres pour l'IA
-        $articles = array_map(function($a) {
-            return [
-                "title" => $a['title'] ?? '',
-                "subtitle" => "",
-                "content" => $a['content'] ?? '',
-                "url" => $a['url'] ?? '',
-            ];
-        }, $feeds);
-        
-
-        // L'IA choisit 1 article
-        $chosen = $ai->MchooseArticle($articles);
-
-         $record = ChosenArticle::create([
-            'data' => $chosen
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'article' => $chosen,
-            'timestamp' => now()->toIso8601String()
-        ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    }
-
-        public function MapiRewriteOne(AIController $ai)
+    public function apiEvalOne(AIController $ai)
     {
         $record = ChosenArticle::latest()->first();
 
@@ -201,16 +163,20 @@ class NewsController extends Controller
             ], 404);
         }
 
-        $article = $record->data;
+        $original = $record->data;
 
-        $rewritten = $ai->MrewriteArticle($article);
+        // 1) Réécrire l’article (fonction déjà existante)
+        $rewritten = $ai->rewriteArticle($original);
 
+        // 2) Évaluer la version réécrite
+        $evaluation = $ai->evaluateArticle($rewritten);
+
+        // 3) Retourner uniquement ce que tu veux
         return response()->json([
             'success' => true,
-            'article' => $rewritten,
+            'rewritten_article' => $rewritten,
+            'evaluation' => $evaluation,
             'timestamp' => now()->toIso8601String()
-        ]);
+        ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
-
-    */
 }
