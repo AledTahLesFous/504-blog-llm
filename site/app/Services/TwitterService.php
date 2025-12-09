@@ -121,19 +121,25 @@ class TwitterService
     /**
      * Formater un article pour Twitter (max 280 caractères)
      */
-    public function formatArticleForTweet(array $article): string
-    {
-        $title = $article['title'];
-        $url = $article['url'];
-        $source = strtoupper($article['source']);
-
-        // Format : "Titre... - SOURCE https://url"
-        $maxTitleLength = 280 - strlen($url) - strlen($source) - 6; // 6 = " - " + " " + "..."
-
-        if (strlen($title) > $maxTitleLength) {
-            $title = substr($title, 0, $maxTitleLength - 3) . '...';
-        }
-
-        return "{$title} - {$source}\n{$url}";
+public function formatArticleForTweet(array $article): string
+{
+    $title = $article['title'];
+    
+    // Optionnel : utiliser le subtitle comme "source" si besoin
+    $source = isset($article['subtitle']) ? $article['subtitle'] : '';
+    
+    // On n'a pas d'url ici
+    $tweet = $title;
+    if (!empty($source)) {
+        $tweet .= ' - ' . $source;
     }
+
+    // Limiter à 280 caractères
+    if (strlen($tweet) > 280) {
+        $tweet = substr($tweet, 0, 277) . '...';
+    }
+
+    return $tweet;
+}
+
 }

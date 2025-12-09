@@ -130,29 +130,30 @@ class NewsController extends Controller
      */
     public function postToTwitter(string $id)
     {
-        $article = $this->rssFeedService->getArticleById($id);
-        
+        // Récupérer depuis la table Article, pas depuis le RSS
+        $article = Article::find($id);
+
         if (!$article) {
-            return response()->json([
+            return [
                 'success' => false,
                 'message' => 'Article non trouvé'
-            ], 404);
+            ];
         }
 
         // Formater le tweet
-        $tweetText = $this->twitterService->formatArticleForTweet($article);
+        $tweetText = $this->twitterService->formatArticleForTweet($article->toArray());
         
         // Poster sur Twitter
         $result = $this->twitterService->postTweet($tweetText);
         
-        return response()->json([
+        return [
             'success' => $result['success'],
             'message' => $result['message'],
             'data' => $result['data'] ?? null,
-            'tweet' => $tweetText,
-            'timestamp' => now()->toIso8601String()
-        ], $result['success'] ? 200 : 400, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            'tweet' => $tweetText
+        ];
     }
+
 
     public function apiEvalOne(AIController $ai)
     {
@@ -179,21 +180,28 @@ class NewsController extends Controller
             $attempt++;
         }
 
+        $twitterResult = null;
+
+
         // Si l'article est "bon" (score >= 0.6), l'enregistrer
         if ($evaluation['score_global'] >= 0.6) {
-            Article::create([
+            $article = Article::create([
                 'title' => $rewritten['title'],
                 'subtitle' => $rewritten['subtitle'] ?? '',
                 'content' => $rewritten['content'], // Markdown
                 'published' => false,
                 'published_at' => null,
             ]);
+
+            $twitterResult = $this->postToTwitter($article->id);
+
         }
 
         return response()->json([
             'success' => true,
             'rewritten_article' => $rewritten,
             'evaluation' => $evaluation,
+            'twitter' => $twitterResult,
             'attempts' => $attempt + 1,
             'timestamp' => now()->toIso8601String()
         ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
