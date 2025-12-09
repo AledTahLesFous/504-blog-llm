@@ -25,6 +25,12 @@ return [
     'gemini' => [
     'key' => env('GEMINI_API_KEY'),
     ],
+    
+    'mistral' => [
+        'key' => env('MISTRAL_API_KEY'),
+        'url' => env('MISTRAL_API_URL'),
+    ],
+
 
     'twitter' => [
         'api_key' => env('TWITTER_API_KEY'),
