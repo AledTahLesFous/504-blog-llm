@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Mon Blog' }}</title>
+    <title>{{ $title ?? 'Le Blog "Les Connus"' }}</title>
 
     <style>
         body {
