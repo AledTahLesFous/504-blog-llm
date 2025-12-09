@@ -68,12 +68,21 @@ class AIController
         "properties" => [
             "title" => ["type" => "string"],
             "subtitle" => ["type" => "string"],
-            "content" => ["type" => "string"]
+            "content" => ["type" => "string"],
+            "url" => ["type" => "string"]
         ],
-        "required" => ["title", "subtitle", "content"]
+        "required" => ["title", "subtitle", "content", "url"]
     ];
 
-      return $this->callGemini($prompt, $schema);
+
+        $data = $this->callGemini($prompt, $schema);
+
+        // fallback si Gemini n’a pas renvoyé d’URL
+        if (!isset($data['url'])) {
+            $data['url'] = $articles[0]['url'] ?? '';
+        }
+
+        return $data;
     }
 
 
@@ -107,12 +116,21 @@ class AIController
             "properties" => [
                 "title" => ["type" => "string"],
                 "subtitle" => ["type" => "string"],
-                "content" => ["type" => "string"]
+                "content" => ["type" => "string"],
+                "url" => ["type" => "string"]
             ],
-            "required" => ["title", "subtitle", "content"]
+            "required" => ["title", "subtitle", "content", "url"]
         ];
 
-        return $this->callGemini($prompt, $schema);
+
+        $data = $this->callGemini($prompt, $schema);
+
+        // fallback si Gemini n’a pas renvoyé d’URL
+        if (!isset($data['url'])) {
+            $data['url'] = $articles[0]['url'] ?? '';
+        }
+
+        return $data;
 
     }
 

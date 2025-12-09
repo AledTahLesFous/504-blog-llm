@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChosenArticle extends Model
 {
-    // Désactiver l'auto-increment car id est un string (MD5)
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['id', 'data'];
+    protected $fillable = ['id', 'url', 'data'];
 
     protected $casts = [
-        'data' => 'array', // auto JSON <=> array
+        'data' => 'array',
     ];
 }
+
 

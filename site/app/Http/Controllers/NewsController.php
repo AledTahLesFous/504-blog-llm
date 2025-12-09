@@ -91,8 +91,10 @@ class NewsController extends Controller
         // Article nouveau, on l'ajoute
         $record = ChosenArticle::create([
             'id' => $articleId,
+            'url' => $chosen['url'],   // <-- essentiel !
             'data' => $chosen
         ]);
+
 
 
         return response()->json([
@@ -185,16 +187,23 @@ class NewsController extends Controller
 
         // Si l'article est "bon" (score >= 0.6), l'enregistrer
         if ($evaluation['score_global'] >= 0.6) {
-            $article = Article::create([
-                'title' => $rewritten['title'],
-                'subtitle' => $rewritten['subtitle'] ?? '',
-                'content' => $rewritten['content'], // Markdown
-                'published' => false,
-                'published_at' => null,
-            ]);
+            $articleId = md5($original['url']); // md5 de l'URL originale
 
-            $twitterResult = $this->postToTwitter($article->id);
+            // Vérifier si l'article existe déjà
+            $existing = Article::find($articleId);
+            if (!$existing) {
+                $article = Article::create([
+                    'id' => $articleId,
+                    'url' => $original['url'],
+                    'title' => $rewritten['title'],
+                    'subtitle' => $rewritten['subtitle'] ?? '',
+                    'content' => $rewritten['content'], // Markdown
+                    'published' => false,
+                    'published_at' => null,
+                ]);
 
+                $twitterResult = $this->postToTwitter($article->id);
+            }
         }
 
         return response()->json([
