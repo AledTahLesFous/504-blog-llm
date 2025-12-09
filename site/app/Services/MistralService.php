@@ -11,7 +11,7 @@ class MistralService
 
     public function __construct()
     {
-        $this->apiKey = config('services.mistral.key');
+        # $this->apiKey = config('services.mistral.key');
         $this->apiUrl = rtrim(config('services.mistral.url', 'https://api.mistral.ai/v1'), '/');
     }
 

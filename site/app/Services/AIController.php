@@ -119,7 +119,7 @@ class AIController
     }
 
 
-
+/*
 
     public function MchooseArticle(array $articles): array
     {
@@ -203,6 +203,8 @@ public function MrewriteArticle(array $article): array
     return $data;
 
     }
+
+    */
 
 
 }

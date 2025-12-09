@@ -22,5 +22,5 @@ Route::get('/articles/latest', function () {                        // api route
 
 
 Route::get('/api/articles/json', [NewsController::class, 'apiJson'])->name('news.api.json'); // API JSON route
-Route::get('/api/articles/one', [NewsController::class, 'MapiOne']);
-Route::get('/api/articles/rewrite', [NewsController::class, 'MapiRewriteOne']);
+Route::get('/api/articles/one', [NewsController::class, 'apiOne']);
+Route::get('/api/articles/rewrite', [NewsController::class, 'apiRewriteOne']);
