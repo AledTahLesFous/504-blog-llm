@@ -21,9 +21,9 @@ public function askGemini(string $prompt): array
             "properties" => [
                 "title" => ["type" => "string"],
                 "subtitle" => ["type" => "string"],
-                "content_markdown" => ["type" => "string"]
+                "content" => ["type" => "string"]
             ],
-            "required" => ["title", "subtitle", "content_markdown"]
+            "required" => ["title", "subtitle", "content"]
         ]
     );
 
@@ -42,7 +42,9 @@ public function askGemini(string $prompt): array
 
     public function test()
     {       
-        return $this->askGemini("Donne moi un titre, un sous titre, et un contenu de 5 lignes. Je veux que le contenu soit en format Markdown. 
+        return $this->askGemini("
+        Donne moi un titre, un sous titre, et un contenu de 5 lignes.
+        Le champ `content` doit être du vrai Markdown (titres, paragraphes).
         Le reste en plain/text.
         Renvoie **uniquement** le JSON demandé.");
     }
