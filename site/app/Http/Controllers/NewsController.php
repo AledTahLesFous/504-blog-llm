@@ -14,40 +14,6 @@ class NewsController extends Controller
     {
         $this->rssFeedService = $rssFeedService;
     }
-    /**
-     * API JSON - Retourne tous les articles
-     */
-    public function apiAll()
-    {
-        $feeds = $this->rssFeedService->getAllArticles(30);
-        
-        return response()->json([
-            'success' => true,
-            'data' => $feeds,
-            'timestamp' => now()->toIso8601String()
-        ]);
-    }
-
-    /**
-     * API JSON - Retourne les articles d'une source - PEUT ETRE A SUPPR
-     */
-    public function apiSource(string $source)
-    {
-        $feedData = $this->rssFeedService->getArticlesBySource($source, 30);
-        
-        if (empty($feedData)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Source non trouvée'
-            ], 404);
-        }
-        
-        return response()->json([
-            'success' => true,
-            'data' => $feedData,
-            'timestamp' => now()->toIso8601String()
-        ]);
-    }
 
     /**
      * API JSON - Retourne tous les articles avec titre, corps et lien

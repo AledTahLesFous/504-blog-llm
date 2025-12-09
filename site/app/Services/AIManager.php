@@ -11,35 +11,6 @@ class AIManager
         $this->gemini = $gemini;
     }
 
-public function askGemini(string $prompt): array
-{
-    $response = $this->gemini->generateStructured(
-        model: "gemini-2.5-flash",
-        prompt: $prompt,
-        schema: [
-            "type" => "object",
-            "properties" => [
-                "title" => ["type" => "string"],
-                "subtitle" => ["type" => "string"],
-                "content" => ["type" => "string"]
-            ],
-            "required" => ["title", "subtitle", "content"]
-        ]
-    );
-
-    // Récupération du texte brisé dans la réponse
-    $raw = $response['candidates'][0]['content']['parts'][0]['text'] ?? null;
-
-    if (!$raw) {
-        throw new \Exception("Réponse inattendue de Gemini");
-    }
-
-    // Décodage JSON → array PHP
-    return json_decode($raw, true);
-}
-
-
-
     public function test()
     {       
         return $this->askGemini("
@@ -48,7 +19,6 @@ public function askGemini(string $prompt): array
         Le reste en plain/text.
         Renvoie **uniquement** le JSON demandé.");
     }
-
 
     public function chooseArticle(array $articles): array   // A RAJOUTER LE IF DEJA BDD ET A METTRE LE LINK DANS LA BDD
     {
