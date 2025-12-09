@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Http\Controllers;
+use App\Services\GeminiService;
+use App\Services\MistralService;
 
 
 class AIController

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\RssFeedService;
 use App\Services\TwitterService;
 use Illuminate\Http\Request;
-use App\Services\AIController;
+use App\Http\Controllers\AIController;
 use App\Models\ChosenArticle;
 
 
