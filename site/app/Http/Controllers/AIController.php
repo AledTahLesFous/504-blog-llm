@@ -93,6 +93,7 @@ class AIController
         - Accroche (subtitle) : alarmiste et provoquant, il faut que ca ALERTE
         - Corps : factuel et précis
         - Le corps doit rester fidèle aux informations originales mais reformulé
+        - Le corps doit etre en format Markdown
         - Renvoie uniquement un JSON structuré avec les champs :
         {
         \"title\": \"...\",

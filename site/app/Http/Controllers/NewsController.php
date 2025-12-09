@@ -7,6 +7,8 @@ use App\Services\TwitterService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AIController;
 use App\Models\ChosenArticle;
+use App\Models\Article;
+
 
 
 class NewsController extends Controller
@@ -165,18 +167,37 @@ class NewsController extends Controller
 
         $original = $record->data;
 
-        // 1) Réécrire l’article (fonction déjà existante)
+        $maxAttempts = 3;
+        $attempt = 0;
         $rewritten = $ai->rewriteArticle($original);
-
-        // 2) Évaluer la version réécrite
         $evaluation = $ai->evaluateArticle($rewritten);
 
-        // 3) Retourner uniquement ce que tu veux
+        while ($evaluation['score_global'] < 0.6 && $attempt < $maxAttempts) {
+            // Réécrire l'article et réévaluer
+            $rewritten = $ai->rewriteArticle($original);
+            $evaluation = $ai->evaluateArticle($rewritten);
+            $attempt++;
+        }
+
+        // Si l'article est "bon" (score >= 0.6), l'enregistrer
+        if ($evaluation['score_global'] >= 0.6) {
+            Article::create([
+                'title' => $rewritten['title'],
+                'subtitle' => $rewritten['subtitle'] ?? '',
+                'content' => $rewritten['content'], // Markdown
+                'published' => false,
+                'published_at' => null,
+            ]);
+        }
+
         return response()->json([
             'success' => true,
             'rewritten_article' => $rewritten,
             'evaluation' => $evaluation,
+            'attempts' => $attempt + 1,
             'timestamp' => now()->toIso8601String()
         ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
+
+
 }
