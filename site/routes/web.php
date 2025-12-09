@@ -21,3 +21,5 @@ Route::get('/articles/latest', function () {                        // api route
     $articles = Article::orderBy('id', 'desc')->take(10)->get();
     return view('articles.main', compact('articles')); // article.main = blade layout of an article
 });
+
+Route::get('/api/articles/json', [NewsController::class, 'apiJson'])->name('news.api.json'); // API JSON route

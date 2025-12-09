@@ -78,4 +78,28 @@ class NewsController extends Controller
             'article' => $article
         ]);
     }
+
+    /**
+     * API JSON - Retourne tous les articles avec titre, corps et lien
+     */
+    public function apiJson()
+    {
+        $feeds = $this->rssFeedService->getAllArticles(50);
+        
+        // Transformer les articles pour ne garder que titre, corps et lien
+        $articles = array_map(function($article) {
+            return [
+                'titre' => $article['title'] ?? '',
+                'corps' => $article['content'] ?? '',
+                'lien' => $article['url'] ?? ''
+            ];
+        }, $feeds);
+        
+        return response()->json([
+            'success' => true,
+            'count' => count($articles),
+            'articles' => $articles,
+            'timestamp' => now()->toIso8601String()
+        ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
 }
