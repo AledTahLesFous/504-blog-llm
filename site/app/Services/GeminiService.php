@@ -40,7 +40,7 @@ class GeminiService
 {
     $endpoint = $this->apiUrl . $model . ":generateContent?key=" . $this->apiKey;
 
-    $response = Http::post($endpoint, [
+    $response = Http::timeout(60)->post($endpoint, [
         "contents" => [
             [
                 "parts" => [

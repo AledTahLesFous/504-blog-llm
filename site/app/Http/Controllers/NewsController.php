@@ -49,7 +49,7 @@ class NewsController extends Controller
     public function apiOne(AIController $ai)
     {
         // Récupération locale (pas de requête HTTP interne)
-        $feeds = $this->rssFeedService->getAllArticles(50);
+        $feeds = $this->rssFeedService->getAllArticles(10);
 
         if (empty($feeds)) {
             return response()->json([
@@ -72,7 +72,11 @@ class NewsController extends Controller
         // L'IA choisit 1 article
         $chosen = $ai->chooseArticle($articles);
 
+        // Calculer le MD5 de l'URL pour l'utiliser comme id
+        $articleId = md5($chosen['url'] ?? '');
+
         $record = ChosenArticle::create([
+            'id' => $articleId,
             'data' => $chosen
         ]);
 

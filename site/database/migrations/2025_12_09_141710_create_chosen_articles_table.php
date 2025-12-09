@@ -12,8 +12,8 @@ return new class extends Migration
 public function up()
 {
     Schema::create('chosen_articles', function (Blueprint $table) {
-        $table->id();
-        $table->json('data');        // Contient l’article choisi
+        $table->string('id', 32)->primary();  // MD5 de l'URL comme clé primaire
+        $table->json('data');        // Contient l'article choisi
         $table->timestamps();
     });
 }
