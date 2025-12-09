@@ -23,7 +23,8 @@ Route::get('/articles/latest', function () {                        // api route
     return view('articles.main', compact('articles')); // article.main = blade layout of an article
 });
 
-
 Route::get('/test', function () {
     return app(AIManager::class)->test();
 });
+
+Route::get('/api/articles/json', [NewsController::class, 'apiJson'])->name('news.api.json'); // API JSON route
