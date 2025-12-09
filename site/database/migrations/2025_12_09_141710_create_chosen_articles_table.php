@@ -14,6 +14,7 @@ public function up()
     Schema::create('chosen_articles', function (Blueprint $table) {
         $table->string('id', 32)->primary();  // MD5 de l'URL comme clé primaire
         $table->json('data');        // Contient l'article choisi
+        $table->string('url')->nullable();
         $table->timestamps();
     });
 }

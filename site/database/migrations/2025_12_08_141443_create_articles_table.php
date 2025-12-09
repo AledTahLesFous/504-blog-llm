@@ -9,10 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('articles', function (Blueprint $table) {
-            $table->id();
+            $table->string('id')->primary(); // MD5 de l'URL
+            $table->string('url')->unique(); // URL originale
             $table->string('title');
             $table->string('subtitle')->nullable();
-            $table->text('content'); // markdown généré par l'IA
+            $table->text('content'); // Markdown généré par l'IA
             $table->boolean('published')->default(false);
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
@@ -24,3 +25,4 @@ return new class extends Migration
         Schema::dropIfExists('articles');
     }
 };
+
