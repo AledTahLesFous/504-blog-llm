@@ -73,4 +73,35 @@ public function apiOne(AIManager $ai)
     ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 }
 
+public function apiRewriteOne(AIManager $ai)
+{
+    // Récupérer un article choisi par l'IA
+    $feeds = $this->rssFeedService->getAllArticles(50);
+    if (empty($feeds)) {
+        return response()->json(['success'=>false,'message'=>'Aucun article disponible'],404);
+    }
+
+    $articles = array_map(function($a){
+        return [
+            "title"=>$a['title'] ?? '',
+            "subtitle"=>"",
+            "content"=>$a['content'] ?? '',
+            "url"=>$a['url'] ?? ''
+        ];
+    }, $feeds);
+
+    $chosen = $ai->chooseArticle($articles);
+
+    // Réécriture du contenu
+    $rewritten = $ai->rewriteArticle($chosen);
+
+    return response()->json([
+        'success' => true,
+        'article' => $rewritten,
+        'original_url' => $chosen['url'] ?? null,
+        'timestamp' => now()->toIso8601String()
+    ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+}
+
+
 }
