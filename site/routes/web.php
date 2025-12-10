@@ -19,7 +19,7 @@ Route::get('/articles/{articleId}/debunk', [DebunkController::class, 'show'])->n
 
 
 Route::get('/articles/latest', function () {                        // api route for ajax update
-    $articles = Article::orderBy('id', 'desc')->take(10)->get();
+    $articles = Article::orderBy('created_at', 'desc')->get();
     return view('articles.main', compact('articles')); // article.main = blade layout of an article
 });
 
