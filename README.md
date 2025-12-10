@@ -6,6 +6,7 @@
 - Force markdown content for article post
 - Debunk page (AI need to explain)
 - Image AI gen for article (optionnal)
+- Protected routes /api/
 
 
 ### Refactor :
