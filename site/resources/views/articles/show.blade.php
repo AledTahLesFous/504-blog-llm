@@ -143,9 +143,6 @@
     
     <a href="/" class="back-link">← Retour aux articles</a>
 
-    <div class="article-meta">
-        {{ $article->published_at ? $article->published_at->format('d/m/Y H:i') : 'Non publié' }}
-    </div>
 
     <h1 class="article-title">{{ $article->title }}</h1>
 
