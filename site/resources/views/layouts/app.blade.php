@@ -3,35 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Le Blog "Les Connus"' }}</title>
+    <title>{{ $title ?? 'Actualités' }}</title>
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background: #f9f9f9;
-            font-family: Arial, sans-serif;
+            background: #fff;
+            font-family: Georgia, 'Times New Roman', serif;
+            color: #333;
         }
 
         header {
-            background: #111;
-            padding: 20px;
-            color: #fff;
-            text-align: center;
-            font-size: 1.4rem;
+            background: #fff;
+            border-bottom: 3px solid #000;
+            padding: 1.5rem 0;
+        }
+
+        header .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        header a {
+            text-decoration: none;
+            color: #000;
+            transition: color 0.2s;
+        }
+
+        header a:hover {
+            color: #666;
         }
 
         .content {
-            padding: 40px 0;
+            background: #fff;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="/" style="text-decoration: none; color: inherit;">
-        Mon Blog Automatique
-    </a>
+    <div class="container">
+        <h1>
+            <a href="/">Actualités</a>
+        </h1>
+    </div>
 </header>
 
 

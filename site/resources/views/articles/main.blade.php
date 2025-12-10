@@ -1,10 +1,15 @@
 @foreach($articles as $article)
-    <div class="article">
-        <h3>
+    <article class="article">
+        <div class="article-meta">
+            {{ $article->published_at ? $article->published_at->format('d/m/Y H:i') : 'Non publié' }}
+        </div>
+        <h2>
             <a href="{{ route('articles.show', $article->id) }}">
                 {{ $article->title }}
             </a>
-        </h3>
-        <p>{{ $article->subtitle }}</p> <!-- si tu veux afficher le subtitle aussi -->
-    </div>
+        </h2>
+        @if($article->subtitle)
+            <p class="article-subtitle">{{ $article->subtitle }}</p>
+        @endif
+    </article>
 @endforeach

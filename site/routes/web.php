@@ -18,9 +18,12 @@ Route::get('/article/{id}', [ArticleController::class, 'show'])->name('articles.
 Route::get('/articles/{articleId}/debunk', [DebunkController::class, 'show'])->name('debunk.show');
 
 
-Route::get('/articles/latest', function () {                        // api route for ajax update
-    $articles = Article::orderBy('id', 'desc')->take(10)->get();
-    return view('articles.main', compact('articles')); // article.main = blade layout of an article
+Route::get('/articles/latest', function () {
+    $articles = Article::where('published', true)
+        ->orderBy('published_at', 'desc')
+        ->take(15)
+        ->get();
+    return view('articles.main', compact('articles'));
 });
 
 
