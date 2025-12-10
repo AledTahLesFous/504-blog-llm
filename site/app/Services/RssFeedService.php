@@ -23,7 +23,7 @@ class RssFeedService
         $allArticles = [];
         
         foreach ($this->feeds as $sourceName => $url) {
-            $articles = $this->getFeedArticles($url, $sourceName, 5);
+            $articles = $this->getFeedArticles($url, $sourceName, 10);
             $allArticles = array_merge($allArticles, $articles);
         }
 

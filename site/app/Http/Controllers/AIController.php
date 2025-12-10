@@ -235,4 +235,55 @@ class AIController
         }
     }
 
+    public function debunk(array $article): array
+{
+    $title = $article['title'] ?? '';
+    $subtitle = $article['subtitle'] ?? '';
+    $content = $article['content'] ?? '';
+    $url = $article['url'] ?? '';
+
+
+    $prompt = "
+Voici un article alarmiste ou sensationnaliste :
+
+Titre : {$title}
+Sous-titre : {$subtitle}
+Contenu : {$content}
+
+Rédige un article de démystification (debunk) :
+- Explique calmement les points exagérés ou alarmistes.
+- Clarifie les termes techniques ou scientifiques.
+- Rassure le lecteur sur ce qui est normal ou attendu.
+- Garde un ton factuel, pédagogique et accessible.
+- Renvoie uniquement un JSON structuré avec :
+{
+  \"title\": \"Titre démystifié\",
+  \"subtitle\": \"Sous-titre explicatif\",
+  \"content\": \"Texte en Markdown...\",
+  \"url\": \"...\"
+}
+";
+
+    $schema = [
+        "type" => "object",
+        "properties" => [
+            "title" => ["type" => "string"],
+            "subtitle" => ["type" => "string"],
+            "content" => ["type" => "string"],
+            "url" => ["type" => "string"]
+
+        ],
+        "required" => ["title", "subtitle", "content", "url"]
+    ];
+
+    $data = $this->callGemini($prompt, $schema);
+
+    // fallback si l'URL n'est pas renvoyée
+    $data['url'] = $url;
+
+
+    return $data;
+}
+
+
 }

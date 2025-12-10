@@ -157,7 +157,7 @@ class NewsController extends Controller
     }
 
 
-    public function apiEvalOne(AIController $ai)
+    public function Main(AIController $ai)
     {
         $record = ChosenArticle::latest()->first();
 
@@ -216,6 +216,26 @@ class NewsController extends Controller
                 $twitterResult['posted'] = $posted;
             }
 
+             // Générer le debunk via l'IA
+            $debunked = $ai->debunk($rewritten);
+
+            // Vérifier cohérence URL
+            if (($debunked['url'] ?? '') === ($original['url'] ?? '')) {
+                // Sauvegarder dans la table debunks
+                \DB::table('debunks')->updateOrInsert(
+                    ['article_id' => $articleId],
+                    [
+                        'title' => $debunked['title'] ?? '',
+                        'subtitle' => $debunked['subtitle'] ?? null,
+                        'content' => $debunked['content'] ?? '',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                );
+
+                $debunkResult = $debunked;
+            }
+
             }
         }
 
@@ -228,6 +248,57 @@ class NewsController extends Controller
             'timestamp' => now()->toIso8601String()
         ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
+
+
+    /**
+ * API pour générer le contenu "debunk" du dernier article choisi
+ */
+public function apiDebunkOne(AIController $ai)
+{
+    // Récupérer le dernier article choisi
+    $record = ChosenArticle::latest()->first();
+
+    if (!$record) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Aucun article enregistré'
+        ], 404);
+    }
+
+    $article = $record->data;
+    $articleId = md5($article['url'] ?? '');
+
+    // Appeler l'IA pour générer le debunk
+    $debunked = $ai->debunk($article);
+
+    // Vérifier que le debunk contient bien l'URL de l'article original
+    if (($debunked['url'] ?? '') === ($article['url'] ?? '')) {
+        // Sauvegarder dans la table debunk_articles
+        \DB::table('debunks')->updateOrInsert(
+            ['article_id' => $articleId],
+            [
+                'title' => $debunked['title'] ?? '',
+                'subtitle' => $debunked['subtitle'] ?? null,
+                'content' => $debunked['content'] ?? '',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
+    } else {
+        // Optionnel : log si l'IA renvoie un article qui ne correspond pas
+        \Log::warning("Le debunk généré ne correspond pas à l'article original", [
+            'article_url' => $article['url'] ?? '',
+            'debunk_url' => $debunked['url'] ?? ''
+        ]);
+    }
+
+    return response()->json([
+        'success' => true,
+        'article' => $debunked,
+        'timestamp' => now()->toIso8601String()
+    ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+}
+
 
 
 }
