@@ -19,3 +19,4 @@
 ### Fix :
 
 ### Chore :
+- Modify cron/schedule to 1h (at the end)
