@@ -77,9 +77,9 @@ class AIController
 
         $data = $this->callGemini($prompt, $schema);
 
-        // fallback si Gemini n’a pas renvoyé d’URL
-        if (!isset($data['url'])) {
-            $data['url'] = $articles[0]['url'] ?? '';
+        // fallback si Gemini n'a pas renvoyé d'URL
+        if (!isset($data['url']) || empty($data['url'])) {
+            $data['url'] = $article['url'] ?? '';
         }
 
         return $data;
