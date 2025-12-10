@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Log;
 class RssFeedService
 {
     private array $feeds = [
-        'franceinfo' => 'https://www.francetvinfo.fr/titres.rss',
-        'lemonde' => 'https://www.lemonde.fr/rss/une.xml',
-        'bfmtv' => 'https://www.bfmtv.com/rss/info/flux-rss/flux-toutes-les-actualites/',
-        'leparisien' => 'https://feeds.leparisien.fr/leparisien/rss',
-        'cnews' => 'https://www.cnews.fr/rss/categorie/france',
+        'franceinfo' => 'https://www.franceinfo.fr/decouverte.rss',
+        'lemonde' => 'https://www.lemonde.fr/sciences/rss_full.xml',
+        'bfmtv' => 'https://www.bfmtv.com/rss/sciences/',
+        'leparisien' => 'https://feeds.leparisien.fr/leparisien/rss/futurs',
+        'cnews' => 'https://www.cnews.fr/rss/categorie/science',
     ];
 
     /**
