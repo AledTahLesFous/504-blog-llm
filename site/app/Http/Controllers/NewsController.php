@@ -202,7 +202,20 @@ class NewsController extends Controller
                     'published_at' => null,
                 ]);
 
-                $twitterResult = $this->postToTwitter($article->id);
+                 // Générer le tweet via l'IA
+            $twitterResult = $ai->twitterPost([
+                'title' => $rewritten['title'],
+                'subtitle' => $rewritten['subtitle'] ?? '',
+                'url' => $original['url']
+            ]);
+
+            // Poster sur Twitter si tout est ok
+            if ($twitterResult['success'] ?? false) {
+                $twitterText = mb_substr($twitterResult['tweet'], 0, 280);
+                $posted = $this->twitterService->postTweet($twitterText);
+                $twitterResult['posted'] = $posted;
+            }
+
             }
         }
 

@@ -171,4 +171,68 @@ class AIController
        return $this->callGemini($prompt, $schema);
 
     }
+
+
+    public function twitterPost(array $article): array
+    {
+        $title = $article['title'] ?? '';
+        $subtitle = $article['subtitle'] ?? '';
+        $url = $article['url'] ?? '';
+
+        if (!$title || !$url) {
+            return [
+                'success' => false,
+                'message' => 'Article incomplet pour Twitter'
+            ];
+        }
+
+        // Prompt IA pour générer le tweet
+        $prompt = "
+    Voici un article avec titre et sous-titre :
+
+    Titre : {$title}
+    Sous-titre : {$subtitle}
+    URL : {$url}
+
+    Génère un texte de tweet basé sur cet article :
+    - Ne modifie pas le titre ni le sous-titre.
+    - Tweet concis et impactant.
+    - Ajoute l'URL complète à la fin.
+    - Maximum 280 caractères (en comptant l'URL).
+    - Renvoie uniquement le texte du tweet.
+    ";
+
+        $schema = [
+            "type" => "object",
+            "properties" => [
+                "tweet" => ["type" => "string"]
+            ],
+            "required" => ["tweet"]
+        ];
+
+        try {
+            $data = $this->callGemini($prompt, $schema);
+
+            // Laisser l'URL complète intacte, tronquer seulement le texte si nécessaire
+            $tweetText = $data['tweet'] ?? "{$title} - {$subtitle} {$url}";
+
+            // Calculer le surplus si le tweet dépasse 280 caractères
+            if (mb_strlen($tweetText) > 280) {
+                // On garde la fin pour le lien complet
+                $tweetText = mb_substr($tweetText, 0, 280 - mb_strlen($url) - 1) . ' ' . $url;
+            }
+
+            return [
+                'success' => true,
+                'tweet' => $tweetText
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Erreur lors de la génération du tweet : ' . $e->getMessage()
+            ];
+        }
+    }
+
 }
