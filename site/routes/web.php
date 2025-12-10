@@ -26,9 +26,13 @@ Route::get('/articles/latest', function () {                        // api route
 
 
 
-Route::get('/api/articles/json', [NewsController::class, 'apiJson'])->name('news.api.json'); // API JSON route
-Route::get('/api/articles/one', [NewsController::class, 'apiOne']);
-Route::get('/api/articles/rewrite', [NewsController::class, 'Main']);
+// 🔐 Routes API avec sécurité API KEY
+Route::middleware('api.key')->group(function () {
 
-Route::get('/api/articles/debunk', [NewsController::class, 'apiDebunkOne']);
+    Route::get('/api/articles/json', [NewsController::class, 'apiJson'])->name('news.api.json');
+    Route::get('/api/articles/one', [NewsController::class, 'apiOne']);
+    Route::get('/api/articles/rewrite', [NewsController::class, 'Main']);
+    Route::get('/api/articles/debunk', [NewsController::class, 'apiDebunkOne']);
+
+});
 

@@ -25,6 +25,10 @@ return [
     'gemini' => [
     'key' => env('GEMINI_API_KEY'),
     ],
+
+    'api' => [
+    'key' => env('API_KEY'),
+    ],
     
     /*
     'mistral' => [
