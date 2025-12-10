@@ -5,7 +5,6 @@
 ### Feat :
 - Force markdown content for article post
 - Image AI gen for article (optionnal)
-- Upgrade choose article = view if already chosen
 
 
 ### Refactor :
