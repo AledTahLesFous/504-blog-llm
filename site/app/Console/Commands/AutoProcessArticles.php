@@ -27,11 +27,20 @@ class AutoProcessArticles extends Command
 
         try {
             // 2. EVAL + REWRITE
-            $eval = $news->apiEvalOne($ai);
+            $eval = $news->Main($ai);
             $this->info("Rewrite + Eval : OK");
 
         } catch (\Exception $e) {
             $this->error("Erreur rewrite/eval : " . $e->getMessage());
+            return Command::FAILURE;
+        }
+        try {
+            // 3. DEBUNK
+            $eval = $news->apiDebunkOne($ai);
+            $this->info("Debunk : OK");
+
+        } catch (\Exception $e) {
+            $this->error("Erreur debunk : " . $e->getMessage());
             return Command::FAILURE;
         }
 
