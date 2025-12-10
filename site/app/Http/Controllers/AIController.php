@@ -39,7 +39,51 @@ class AIController
     }
 
 
-    public function chooseArticle(array $articles): array   // A RAJOUTER LE IF DEJA BDD ET A METTRE LE LINK DANS LA BDD
+    /**
+     * Choisit un article parmi une liste, en excluant les URLs déjà présentes en base
+     * 
+     * @param array $articles Liste des articles disponibles
+     * @param array $excludedUrls Liste des URLs à exclure (déjà en base)
+     * @param int $maxAttempts Nombre maximum de tentatives
+     * @return array|null Article choisi ou null si aucun article valide
+     */
+    public function chooseUniqueArticle(array $articles, array $excludedUrls = [], int $maxAttempts = 3): ?array
+    {
+        // Filtrer les articles déjà exclus
+        $availableArticles = array_filter($articles, function($article) use ($excludedUrls) {
+            return !in_array($article['url'] ?? '', $excludedUrls);
+        });
+
+        // Réindexer le tableau
+        $availableArticles = array_values($availableArticles);
+
+        if (empty($availableArticles)) {
+            return null; // Plus d'articles disponibles
+        }
+
+        // Essayer jusqu'à maxAttempts fois
+        for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+            $chosen = $this->chooseArticle($availableArticles);
+            $chosenUrl = $chosen['url'] ?? '';
+
+            // Vérifier si l'article choisi n'est pas dans les exclus
+            if (!in_array($chosenUrl, $excludedUrls)) {
+                return $chosen;
+            }
+
+            // Ajouter cette URL aux exclus pour le prochain essai
+            $excludedUrls[] = $chosenUrl;
+        }
+
+        // Si toutes les tentatives ont échoué, prendre un article aléatoire parmi les disponibles
+        if (!empty($availableArticles)) {
+            return $availableArticles[array_rand($availableArticles)];
+        }
+
+        return null;
+    }
+
+    public function chooseArticle(array $articles): array
     {
         // On envoie la liste complète à Gemini
         $prompt = "
@@ -79,7 +123,7 @@ class AIController
 
         // fallback si Gemini n'a pas renvoyé d'URL
         if (!isset($data['url']) || empty($data['url'])) {
-            $data['url'] = $article['url'] ?? '';
+            $data['url'] = $articles[0]['url'] ?? '';
         }
 
         return $data;

@@ -69,24 +69,21 @@ class NewsController extends Controller
             ];
         }, $feeds);
         
+        // Récupérer toutes les URLs déjà présentes en base
+        $existingUrls = ChosenArticle::all()->pluck('url')->toArray();
 
-        // L'IA choisit 1 article
-        $chosen = $ai->chooseArticle($articles);
+        // L'IA choisit 1 article en excluant ceux déjà en base
+        $chosen = $ai->chooseUniqueArticle($articles, $existingUrls);
+
+        if (!$chosen) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tous les articles ont déjà été choisis'
+            ], 404);
+        }
 
         // Calculer le MD5 de l'URL pour l'utiliser comme id
         $articleId = md5($chosen['url'] ?? '');
-
-        // Vérifier si l'article existe déjà dans la base
-        $existing = ChosenArticle::find($articleId);
-
-        if ($existing) {
-            // Article déjà en base, ne rien faire, juste retourner l'existant
-            return response()->json([
-                'success' => true,
-                'article' => $existing->data,
-                'timestamp' => now()->toIso8601String()
-            ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        }
 
         // Article nouveau, on l'ajoute
         $record = ChosenArticle::create([
