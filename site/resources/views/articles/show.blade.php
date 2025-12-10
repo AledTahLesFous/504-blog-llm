@@ -3,15 +3,15 @@
 @section('content')
 <style>
     .article-wrapper {
-        max-width: 750px;
+        max-width: 1000px;
         margin: 0 auto;
-        padding: 3rem 20px;
+        padding: 4rem 50px;
     }
 
     .article-meta {
         font-size: 0.85rem;
         color: #999;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         font-family: Arial, sans-serif;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -20,28 +20,28 @@
     .article-title {
         font-size: 2.5rem;
         font-weight: 700;
-        line-height: 1.2;
-        margin-bottom: 1rem;
+        line-height: 1.3;
+        margin-bottom: 1.5rem;
         color: #000;
     }
 
     .article-subtitle {
         font-size: 1.2rem;
         color: #666;
-        margin-bottom: 2rem;
-        line-height: 1.4;
+        margin-bottom: 2.5rem;
+        line-height: 1.5;
         font-family: Arial, sans-serif;
     }
 
     .article-divider {
         border: 0;
         border-top: 1px solid #ddd;
-        margin: 2rem 0;
+        margin: 2.5rem 0;
     }
 
     .article-body {
-        font-size: 1.1rem;
-        line-height: 1.8;
+        font-size: 1.15rem;
+        line-height: 1.9;
         color: #333;
     }
 
@@ -49,21 +49,21 @@
     .article-body h2 {
         font-size: 1.8rem;
         font-weight: 700;
-        margin-top: 2.5rem;
-        margin-bottom: 1rem;
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
         color: #000;
     }
 
     .article-body h3 {
         font-size: 1.4rem;
         font-weight: 600;
-        margin-top: 2rem;
-        margin-bottom: 0.8rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
         color: #000;
     }
 
     .article-body p {
-        margin-bottom: 1.2rem;
+        margin-bottom: 1.5rem;
     }
 
     .article-body ul,
