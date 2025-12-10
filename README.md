@@ -5,7 +5,6 @@
 ### Feat :
 - Force markdown content for article post
 - Image AI gen for article (optionnal)
-- Protected routes /api/
 - Upgrade choose article = view if already chosen
 
 
@@ -13,6 +12,8 @@
 - prompt for rewrite
 - All in english & comments
 - Clean code n stuff
+- Style homepage
+- Change API X bcs acc shadowbanned (at the end)
 
 
 
