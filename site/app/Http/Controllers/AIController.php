@@ -47,7 +47,7 @@ class AIController
      * @param int $maxAttempts Nombre maximum de tentatives
      * @return array|null Article choisi ou null si aucun article valide
      */
-    public function chooseUniqueArticle(array $articles, array $excludedUrls = [], int $maxAttempts = 3): ?array
+    public function chooseUniqueArticle(array $articles, array $excludedUrls = [], int $maxAttempts = 10): ?array
     {
         // Filtrer les articles déjà exclus
         $availableArticles = array_filter($articles, function($article) use ($excludedUrls) {

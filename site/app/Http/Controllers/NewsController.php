@@ -50,7 +50,7 @@ class NewsController extends Controller
     public function apiOne(AIController $ai)
     {
         // Récupération locale (pas de requête HTTP interne)
-        $feeds = $this->rssFeedService->getAllArticles(10);
+        $feeds = $this->rssFeedService->getAllArticles(50);
 
         if (empty($feeds)) {
             return response()->json([
