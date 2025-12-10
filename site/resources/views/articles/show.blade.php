@@ -83,5 +83,15 @@
         {!! $html !!} {{-- contenu HTML généré automatiquement depuis Markdown --}}
     </div>
 
+     {{-- Lien vers l'article debunk --}}
+    @if($debunkLink ?? false)
+        <hr style="margin:3rem 0; border-color:#ddd;">
+        <p>
+            <a href="{{ $debunkLink }}" style="color:#c00; font-weight:600;">
+                Voir l'article démystifié (Debunk)
+            </a>
+        </p>
+    @endif
+
 </div>
 @endsection
