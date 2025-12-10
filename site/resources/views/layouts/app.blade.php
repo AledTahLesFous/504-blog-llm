@@ -28,9 +28,12 @@
 </head>
 <body>
 
-    <header>
+<header>
+    <a href="/" style="text-decoration: none; color: inherit;">
         Mon Blog Automatique
-    </header>
+    </a>
+</header>
+
 
     <div class="content">
         @yield('content')
