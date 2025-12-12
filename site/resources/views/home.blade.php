@@ -135,7 +135,7 @@
         }
 
         loadArticles();
-        setInterval(loadArticles, 10000);
+        setInterval(loadArticles, 3600000);
     </script>
 </body>
 </html>

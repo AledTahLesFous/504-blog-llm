@@ -167,6 +167,12 @@
     <div class="article-body">
         {!! $html !!}
     </div>
+    
+
+    <div class="article-meta">
+        URL : <a href="{{ $article->url }}" target="_blank">{{ $article->url }}</a>
+    </div>
+
 
     @if($debunkLink ?? false)
         <div class="debunk-section">
