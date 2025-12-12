@@ -10,7 +10,7 @@ return new class extends Migration
     {
 Schema::create('debunks', function (Blueprint $table) {
     $table->id();
-    $table->string('article_id', 32)->unique(); // MD5 = 32 caractères
+    $table->string('article_id')->unique(); // MD5 = 32 caractères
     $table->string('title');
     $table->string('subtitle')->nullable();
     $table->text('content');

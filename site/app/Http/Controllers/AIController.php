@@ -19,7 +19,7 @@ class AIController
     protected function callGemini(string $prompt, array $schema): array
     {
         $response = $this->gemini->generateStructured(
-            model: "gemini-2.5-flash",
+            model: "gemini-3-pro-preview",
             prompt: $prompt,
             schema: $schema
         );
