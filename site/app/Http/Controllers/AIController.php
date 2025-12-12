@@ -329,5 +329,54 @@ Rédige un article de démystification (debunk) :
     return $data;
 }
 
+    /**
+     * Génère une image pour un article en utilisant Gemini Imagen
+     * 
+     * @param array $article L'article pour lequel générer une image
+     * @return string|null URL de l'image générée (data:image) ou null en cas d'erreur
+     */
+    public function generateArticleImage(array $article): ?string
+    {
+        try {
+            $title = $article['title'] ?? '';
+            $subtitle = $article['subtitle'] ?? '';
+            
+            // Créer un prompt descriptif pour l'image
+            $imagePrompt = "Create a professional, high-quality news article illustration for: \"{$title}\". ";
+            
+            if ($subtitle) {
+                $imagePrompt .= "Context: {$subtitle}. ";
+            }
+            
+            $imagePrompt .= "Style: Modern, clean, journalistic, eye-catching. No text or watermarks in the image.";
+            
+            // Générer l'image (retourne base64)
+            $base64Image = $this->gemini->generateImage($imagePrompt);
+            
+            if (!$base64Image) {
+                return null;
+            }
+
+            // Extraire les données de l'image base64
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $matches)) {
+                $imageData = substr($base64Image, strpos($base64Image, ',') + 1);
+                $imageData = base64_decode($imageData);
+                
+                // Sauvegarder dans le stockage public
+                $filename = "articles/{$article['id']}.png";
+                \Storage::disk('public')->put($filename, $imageData);
+                
+                return $filename;
+            }
+            
+            return null;
+            
+        } catch (\Exception $e) {
+            // En cas d'erreur, logger et retourner null
+            \Log::error("Erreur génération image : " . $e->getMessage());
+            return null;
+        }
+    }
+
 
 }
