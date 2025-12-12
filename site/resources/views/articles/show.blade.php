@@ -33,6 +33,14 @@
         font-family: Arial, sans-serif;
     }
 
+    .article-image {
+        width: 100%;
+        height: auto;
+        margin: 2rem 0;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
     .article-divider {
         border: 0;
         border-top: 1px solid #ddd;
@@ -148,6 +156,10 @@
 
     @if($article->subtitle)
         <p class="article-subtitle">{{ $article->subtitle }}</p>
+    @endif
+
+    @if($article->image_url)
+        <img src="{{ $article->image_url }}" alt="{{ $article->title }}" class="article-image">
     @endif
 
     <hr class="article-divider">

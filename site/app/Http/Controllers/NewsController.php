@@ -199,6 +199,9 @@ class NewsController extends Controller
                     'published_at' => null,
                 ]);
 
+                // Générer et sauvegarder l'image après création de l'article
+                $ai->generateArticleImage(array_merge($rewritten, ['id' => $articleId]));
+
                  // Générer le tweet via l'IA
             $twitterResult = $ai->twitterPost([
                 'title' => $rewritten['title'],
